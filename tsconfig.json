@@ -1,22 +1,23 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
+    "extends": "@vue/tsconfig/tsconfig.json",
+    "compilerOptions": {
+        "sourceMap": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "lib": ["esnext", "dom"],
+        "types": [
+            "@dcloudio/types",
+            "@types/wechat-miniprogram",
+            "@uni-helper/uni-app-types",
+            "@uni-helper/uni-ui-types"
+        ],
+        "ignoreDeprecations": "5.0"
     },
-    "lib": ["esnext", "dom"],
-    "types": [
-      "@dcloudio/types",
-      "@types/wechat-miniprogram",
-      "@uni-helper/uni-app-types"
-    ],
-    "ignoreDeprecations": "5.0"
-  },
-  "vueCompilerOptions": {
-    // "experimentalRuntimeMode": "runtime-uni-app",
-    "nativeTags": ["block", "component", "template", "slot"]
-  },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+    "vueCompilerOptions": {
+        // "experimentalRuntimeMode": "runtime-uni-app",
+        "nativeTags": ["block", "component", "template", "slot"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/*.vue"]
 }
