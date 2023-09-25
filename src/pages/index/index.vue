@@ -3,6 +3,7 @@
     <image class="logo" src="/static/logo.png" />
     <view class="text-area">
       <text class="title">{{ title }}</text>
+      <button @click="setStorage">点击</button>
     </view>
   </view>
 </template>
@@ -10,6 +11,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const title = ref('Hello')
+import useMemberStore from '@/store/modules/useMember'
+
+const useMember = useMemberStore()
+const setStorage = () => {
+  useMember.setProfile({ nickname: 'new uniapp' })
+}
 </script>
 
 <style>
