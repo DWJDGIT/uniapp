@@ -1,3 +1,4 @@
+import type { MISS_TYPE } from '@/modules/base'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
