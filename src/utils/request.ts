@@ -1,4 +1,4 @@
-import type { MISS_TYPE } from '@/modules/base'
+import type { MISS_TYPE, ResponseDataSetting } from '@/modules/base'
 type DataType = string | AnyObject | ArrayBuffer | undefined
 type MethodType =
   | 'GET'
@@ -28,14 +28,18 @@ export interface RequestDataConfig {
   responseType?: MISS_TYPE
   [key: string]: MISS_TYPE
 }
+
+type ConfigType = RequestDataConfig & UniApp.RequestOptions
+
 class Request {
   config = {
     baseURL: '',
     header: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
+      'source-client': 'miniapp'
     },
     method: 'GET',
-    timeout: 6000,
+    timeout: 60000,
     dataType: 'json',
     responseType: 'text'
   } as RequestDataConfig
@@ -56,7 +60,7 @@ class Request {
       }
     }
   }
-  static requestBefore(config: MISS_TYPE) {
+  static requestBefore(config: RequestDataConfig) {
     return config
   }
   static requestAfter(response: MISS_TYPE) {
@@ -70,45 +74,40 @@ class Request {
    * @param func
    */
   setConfig(config: RequestDataConfig) {
-    this.config = { ...config, ...this.config }
+    this.config = { ...this.config, ...config }
   }
   // 获取接口地址
   getConfig(): RequestDataConfig {
     return this.config
   }
-  request(options = {} as RequestDataConfig) {
-    // options.data = options.data
+  request<T>(options = {} as RequestDataConfig) {
     options.baseURL = options.baseURL || this.config.baseURL
     options.dataType = options.dataType || this.config.dataType
     options.url = Request.isCompleteURL(options.url) ? options.url : options.baseURL + options.url
-    options.header = { ...options.header, ...this.config.header }
+    options.header = { ...this.config.header, ...options.header }
     options.method = options.method || this.config.method
-    options = { ...options, ...Request.requestBefore(options) }
-    return new Promise((resolve, reject) => {
+    options = { ...Request.requestBefore(options), ...options }
+    return new Promise<ResponseDataSetting<T>>((resolve, reject) => {
       options.success = function (res: UniApp.RequestSuccessCallbackResult) {
-        resolve(Request.requestAfter(res))
+        resolve(Request.requestAfter(res) as ResponseDataSetting<T>)
       }
       options.fail = function (err: UniApp.GeneralCallbackResult) {
         reject(Request.requestAfter(err))
       }
-      uni.request(options as UniApp.RequestOptions & RequestDataConfig)
+      uni.request(options as ConfigType)
     })
   }
-  get(url: string, data: string, options = {} as RequestDataConfig) {
+  get<K>(url: string, data: DataType, options = {} as RequestDataConfig) {
     options.url = url
     options.data = data
     options.method = 'GET'
-    return this.request(options as UniApp.RequestOptions & RequestDataConfig)
+    return this.request(options) as Promise<ResponseDataSetting<K>>
   }
-  post<T extends DataType>(
-    url: string,
-    data: T,
-    options = {} as UniApp.RequestOptions & RequestDataConfig
-  ) {
+  post<T extends DataType, K>(url: string, data: T, options = {} as ConfigType) {
     options.url = url
     options.data = data
     options.method = 'POST'
-    return this.request(options)
+    return this.request(options) as Promise<ResponseDataSetting<K>>
   }
 }
 

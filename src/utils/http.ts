@@ -1,22 +1,23 @@
 import type { MISS_OBJECT } from '@/modules/base'
-import request, { type RequestDataConfig } from './request'
+import instance, { type RequestDataConfig } from './request'
 
 const token = uni.getStorageSync('token')
 
 // 模拟axios的请求配置
-request.setConfig({
-  baseURL: 'http://localhost',
+instance.setConfig({
+  baseURL: 'http://localhost:3000',
   timeout: 6000
 })
 
-request.interceptors.request((request: RequestDataConfig) => {
+// console.log(instance.getConfig())
+instance.interceptors.request((instance: RequestDataConfig) => {
   if (token) {
-    request.header['Authorization'] = `Bearer ${token}`
+    instance.header['Authorization'] = `Bearer ${token}`
   }
-  return request
+  return instance
 })
 
-request.interceptors.response((response: MISS_OBJECT) => {
+instance.interceptors.response((response: MISS_OBJECT) => {
   //   if (response.data.isOverTime) {
   //     uni.showModal({
   //       title: '提示',
@@ -36,8 +37,14 @@ request.interceptors.response((response: MISS_OBJECT) => {
   //   }
   /**
    * 抓错处理
+   * 404这些在uni里面也不算是错误
+   * 这里要单独进行错误分发
    */
-  return response
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    return response.data
+  } else {
+    return new Promise((reject) => reject({ code: response.statusCode, msg: 'fail', data: null }))
+  }
 })
 
-export default request
+export default instance

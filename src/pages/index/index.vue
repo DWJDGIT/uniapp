@@ -1,48 +1,37 @@
 <template>
   <view class="content">
-    <image class="logo" src="/static/logo.png" />
-    <view class="text-area">
-      <text class="title">{{ title }}</text>
-      <button @click="setStorage">点击</button>
+    <CustomNavBar />
+    <Xtxswiper />
+    <view class="prod-list">
+      <view class="list-item" v-for="item in 8" :key="item">
+        <text>{{ item }}</text>
+      </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-const title = ref('Hello')
-import useMemberStore from '@/store/modules/useMember'
-
-const useMember = useMemberStore()
-const setStorage = () => {
-  useMember.setProfile({ nickname: 'new uniapp' })
-}
+import CustomNavBar from './component/index.vue'
+import Xtxswiper from '@/components/Xtxswiper/index.vue'
 </script>
 
-<style>
-.content {
+<style lang="scss" scoped>
+.prod-list {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
-}
-
-.text-area {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  .list-item {
+    height: 60px;
+    flex: 0 0 24%;
+    margin-right: 20px;
+    margin-right: calc(4% / 3);
+    margin-bottom: calc(4% / 3);
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    &:nth-of-type(4n + 0) {
+      margin-right: 0;
+    }
+  }
 }
 </style>

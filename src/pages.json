@@ -1,10 +1,12 @@
 {
   // 组件自动导入
+  // 修改这里要重启终端
   "easycom": {
     "autoscan": true,
     "custom": {
       // uni-ui 规则如下配置
-      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+      "^Xtx(.*)": "@/components/Xtx$1.vue"
     }
   },
   "pages": [
@@ -12,6 +14,10 @@
     {
       "path": "pages/index/index",
       "style": {
+        // 隐藏默认导航栏
+        "navigationStyle": "custom",
+        // 设置文字颜色
+        "navigationBarTextStyle": "white",
         "navigationBarTitleText": "首页"
       }
     },
@@ -22,10 +28,29 @@
       }
     }
   ],
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/shouye_def.png",
+        "selectedIconPath": "static/shouye_selected.png"
+      },
+      {
+        "pagePath": "pages/my/index",
+        "text": "我的",
+        "iconPath": "static/My_def.png",
+        "selectedIconPath": "static/My_selected.png"
+      }
+    ],
+    "color": "",
+    "selectedColor": "#27BA9B",
+    "backgroundColor": "white"
+  },
   "globalStyle": {
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "white",
     "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
+    "navigationBarBackgroundColor": "#27BA9B",
     "backgroundColor": "#F8F8F8"
   }
 }
